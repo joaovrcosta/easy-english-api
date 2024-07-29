@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  questty-api:
+    image: bitnami/postgresql
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRESQL_USERNAME: docker
+      POSTGRESQL_PASSWORD: docker
+      POSTGRESQL_DATABASE: lumi
+#     networks:
+#       - questty
+# networks:
+#   freecodecamp:
