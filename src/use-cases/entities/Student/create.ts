@@ -1,7 +1,8 @@
+import { AddressRepository } from '@/repositories/adresses-repository'
 import { StudentRepository } from '@/repositories/students-repository'
 import { InvalidCPFFormat } from '@/utils/errors/students/invalidCPFformat.error'
 import { InvalidRGFormat } from '@/utils/errors/students/invalidRGFormat.error'
-import { Student } from '@prisma/client'
+import { Student, Address } from '@prisma/client'
 
 interface CreateUseCaseProps {
   name: string
@@ -14,14 +15,27 @@ interface CreateUseCaseProps {
   rg: string
   nationality: string
   sex: string
+  address?: {
+    street: string
+    number: string
+    complement?: string
+    neighborhood: string
+    city: string
+    state: string
+    zipCode: string
+  }
 }
 
 interface CreateUseCaseResponse {
   student: Student
+  address: Address
 }
 
 export class CreateStudent {
-  constructor(private studentRepository: StudentRepository) {}
+  constructor(
+    private studentRepository: StudentRepository,
+    private addressRepository: AddressRepository
+  ) {}
 
   private isValidCPF(cpf: string): boolean {
     const cleanedCPF = cpf.replace(/\D/g, '')
@@ -44,6 +58,7 @@ export class CreateStudent {
     rg,
     nationality,
     sex,
+    address,
   }: CreateUseCaseProps): Promise<CreateUseCaseResponse> {
     if (!this.isValidCPF(cpf)) {
       throw new InvalidCPFFormat()
@@ -53,7 +68,6 @@ export class CreateStudent {
       throw new InvalidRGFormat()
     }
 
-    // Criação do estudante no repositório
     const student = await this.studentRepository.create({
       name,
       email,
@@ -68,6 +82,33 @@ export class CreateStudent {
       active: true,
     })
 
-    return { student }
+    console.log(student)
+
+    let createdAddress: Address
+    if (address) {
+      createdAddress = await this.addressRepository.create({
+        ...address,
+        studentId: student.id,
+      })
+    } else {
+      createdAddress = {
+        id: 0,
+        street: '',
+        number: '',
+        complement: '',
+        neighborhood: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        studentId: student.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        guardianId: null,
+      }
+    }
+
+    console.log(createdAddress)
+
+    return { student, address: createdAddress }
   }
 }

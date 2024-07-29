@@ -16,6 +16,17 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     rg: z.string(),
     nationality: z.string(),
     sex: z.string(),
+    address: z
+      .object({
+        street: z.string(),
+        number: z.string(),
+        complement: z.string().optional(),
+        neighborhood: z.string(),
+        city: z.string(),
+        state: z.string(),
+        zipCode: z.string(),
+      })
+      .optional(),
   })
 
   const {
@@ -29,12 +40,13 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     rg,
     nationality,
     sex,
+    address,
   } = createStudentBodySchema.parse(request.body)
 
   const createStudentUseCase = makeCreateStudentUseCase()
 
   try {
-    await createStudentUseCase.execute({
+    const result = await createStudentUseCase.execute({
       name,
       email,
       phone,
@@ -45,6 +57,16 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       rg,
       nationality,
       sex,
+      address,
+    })
+
+    console.log(result, 'result')
+
+    const { student, address: createdAddress } = result
+
+    return reply.status(201).send({
+      student,
+      address: createdAddress,
     })
   } catch (err) {
     if (err instanceof InvalidCPFFormat) {
@@ -59,6 +81,4 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       return reply.code(500).send({ message: 'Unknown error occurred' })
     }
   }
-
-  return reply.status(201).send()
 }

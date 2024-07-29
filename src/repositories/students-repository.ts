@@ -1,5 +1,9 @@
-import { Prisma, Student } from '@prisma/client'
+import { Student, Prisma, Address } from '@prisma/client'
 
 export interface StudentRepository {
-  create(data: Prisma.StudentUncheckedCreateInput): Promise<Student>
+  create(studentData: Prisma.StudentUncheckedCreateInput): Promise<Student>
+  createWithAddress(
+    studentData: Prisma.StudentUncheckedCreateInput,
+    addressData?: Prisma.AddressUncheckedCreateInput
+  ): Promise<{ student: Student; address?: Address }>
 }

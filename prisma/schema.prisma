@@ -64,19 +64,17 @@ model Address {
   id           Int       @id @default(autoincrement())
   street       String
   number       String
-  complement   String
+  complement   String?
   neighborhood String
   city         String
   state        String
   zipCode      String
   studentId    Int
+  student      Student   @relation(fields: [studentId], references: [id])
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  student      Student   @relation(fields: [studentId], references: [id])
   Guardian     Guardian? @relation(fields: [guardianId], references: [id])
   guardianId   Int?
-
-  @@map("addresses")
 }
 
 model Contract {
