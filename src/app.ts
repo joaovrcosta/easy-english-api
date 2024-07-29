@@ -3,6 +3,7 @@ import { ZodError } from 'zod'
 import { env } from './env'
 import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
+import { studentsRoutes } from './http/controllers/students/routes'
 
 export const app = fastify()
 
@@ -21,6 +22,8 @@ app.register(fastifyJwt, {
     expiresIn: '10m',
   },
 })
+
+app.register(studentsRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

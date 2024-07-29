@@ -1,0 +1,5 @@
+import { Prisma, Student } from '@prisma/client'
+
+export interface StudentRepository {
+  create(data: Prisma.StudentUncheckedCreateInput): Promise<Student>
+}

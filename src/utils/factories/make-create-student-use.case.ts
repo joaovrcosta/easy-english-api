@@ -1,0 +1,9 @@
+import { PrismaStudentsRepository } from '@/repositories/prisma/prisma-students-repository'
+import { CreateStudent } from '@/use-cases/entities/Student/create'
+
+export function makeCreateStudentUseCase() {
+  const studentRepository = new PrismaStudentsRepository()
+  const useCase = new CreateStudent(studentRepository)
+
+  return useCase
+}
