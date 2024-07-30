@@ -1,4 +1,4 @@
-import { TeacherRepository } from '@/repositories/teacher-repository'
+import { TeacherRepository } from '@/repositories/teachers-repository'
 import { Teacher } from '@prisma/client'
 
 interface CreateTeacherUseCaseProps {

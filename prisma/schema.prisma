@@ -140,8 +140,8 @@ model Course {
   avaliation   Float
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
-  teacherId    Int
-  teacher      Teacher         @relation(fields: [teacherId], references: [id])
+  teacherId    Int?
+  teacher      Teacher?        @relation(fields: [teacherId], references: [id])
   students     StudentCourse[]
 
   @@map("courses")
