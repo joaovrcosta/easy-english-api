@@ -27,6 +27,14 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
         zipCode: z.string(),
       })
       .optional(),
+    guardian: z
+      .object({
+        name: z.string(),
+        phone: z.string(),
+        email: z.string(),
+        relationship: z.string(),
+      })
+      .optional(),
   })
 
   const {
@@ -41,6 +49,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     nationality,
     sex,
     address,
+    guardian,
   } = createStudentBodySchema.parse(request.body)
 
   const createStudentUseCase = makeCreateStudentUseCase()
@@ -58,15 +67,21 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       nationality,
       sex,
       address,
+      guardian,
     })
 
     console.log(result, 'result')
 
-    const { student, address: createdAddress } = result
+    const {
+      student,
+      address: createdAddress,
+      guardian: createdGuardian,
+    } = result
 
     return reply.status(201).send({
       student,
       address: createdAddress,
+      guardian: createdGuardian,
     })
   } catch (err) {
     if (err instanceof InvalidCPFFormat) {

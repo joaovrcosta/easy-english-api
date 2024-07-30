@@ -21,7 +21,7 @@ model Teacher {
 }
 
 model Student {
-  id          Int             @id @default(autoincrement())
+  id          Int               @id @default(autoincrement())
   name        String
   active      Boolean
   phone       String
@@ -33,31 +33,39 @@ model Student {
   rg          String
   nationality String
   sex         String
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
   guardianId  Int?
-  Guardian    Guardian?       @relation(fields: [guardianId], references: [id])
+  Guardian    Guardian?         @relation(fields: [guardianId], references: [id])
   Address     Address[]
   courses     StudentCourse[]
   Contract    Contract[]
   Invoice     Invoice[]
+  guardians   StudentGuardian[]
 
   @@map("students")
 }
 
-model Guardian {
-  id        Int       @id @default(autoincrement())
-  name      String
-  phone     String
-  email     String
-  cpf       String?
-  rg        String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Address   Address[]
-  Student   Student[]
+model StudentGuardian {
+  studentId  Int
+  guardianId Int
+  student    Student  @relation(fields: [studentId], references: [id])
+  guardian   Guardian @relation(fields: [guardianId], references: [id])
 
-  @@map("guardians")
+  @@id([studentId, guardianId])
+}
+
+model Guardian {
+  id           Int               @id @default(autoincrement())
+  name         String
+  phone        String
+  email        String
+  relationship String
+  students     StudentGuardian[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  Student      Student[]
+  Address      Address[]
 }
 
 model Address {
