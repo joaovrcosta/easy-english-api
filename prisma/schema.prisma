@@ -87,26 +87,27 @@ model Address {
 }
 
 model Contract {
-  id        String    @id @default(uuid())
-  duration  Int
-  active    Boolean
-  startDate DateTime
-  endDate   DateTime
-  studentId Int
-  student   Student   @relation(fields: [studentId], references: [id])
-  invoices  Invoice[]
+  id         String    @id @default(uuid())
+  duration   Int
+  totalValue Int
+  active     Boolean
+  startDate  DateTime
+  endDate    DateTime
+  studentId  Int
+  student    Student   @relation(fields: [studentId], references: [id])
+  invoices   Invoice[]
 
   @@map("contracts")
 }
 
 model Invoice {
   id         String   @id @default(uuid())
-  amount     Float
+  amount     Int
   emission   DateTime
   dueDate    DateTime
-  discount   Float
-  interest   Float
-  fine       Float
+  discount   Int
+  interest   Int
+  fine       Int
   paid       Boolean
   studentId  Int
   student    Student  @relation(fields: [studentId], references: [id])

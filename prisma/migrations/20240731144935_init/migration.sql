@@ -78,6 +78,7 @@ CREATE TABLE "Address" (
 CREATE TABLE "contracts" (
     "id" TEXT NOT NULL,
     "duration" INTEGER NOT NULL,
+    "totalValue" INTEGER NOT NULL,
     "active" BOOLEAN NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
@@ -89,12 +90,12 @@ CREATE TABLE "contracts" (
 -- CreateTable
 CREATE TABLE "invoices" (
     "id" TEXT NOT NULL,
-    "amount" DOUBLE PRECISION NOT NULL,
+    "amount" INTEGER NOT NULL,
     "emission" TIMESTAMP(3) NOT NULL,
     "dueDate" TIMESTAMP(3) NOT NULL,
-    "discount" DOUBLE PRECISION NOT NULL,
-    "interest" DOUBLE PRECISION NOT NULL,
-    "fine" DOUBLE PRECISION NOT NULL,
+    "discount" INTEGER NOT NULL,
+    "interest" INTEGER NOT NULL,
+    "fine" INTEGER NOT NULL,
     "paid" BOOLEAN NOT NULL,
     "studentId" INTEGER NOT NULL,
     "contractId" TEXT NOT NULL,
