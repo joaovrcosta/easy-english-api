@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Teacher {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   phone     String
   email     String
   birthDay  DateTime
   courses   Course[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Schedule  Schedule[]
 
   @@map("teachers")
 }
@@ -99,7 +100,7 @@ model Contract {
 }
 
 model Invoice {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(uuid())
   amount     Float
   emission   DateTime
   dueDate    DateTime
@@ -143,6 +144,32 @@ model Course {
   teacherId    Int?
   teacher      Teacher?        @relation(fields: [teacherId], references: [id])
   students     StudentCourse[]
+  Schedule     Schedule[]
 
   @@map("courses")
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model Schedule {
+  id        Int         @id @default(autoincrement())
+  startTime DateTime
+  endTime   DateTime
+  dayOfWeek DayOfWeek[]
+  courseId  Int
+  course    Course      @relation(fields: [courseId], references: [id])
+  teacherId Int
+  teacher   Teacher     @relation(fields: [teacherId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("schedules")
 }
