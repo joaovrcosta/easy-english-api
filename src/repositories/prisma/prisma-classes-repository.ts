@@ -6,4 +6,8 @@ export class PrismaClassRepository implements ClassesRepository {
   async create(data: Prisma.CourseUncheckedCreateInput) {
     return await prisma.course.create({ data })
   }
+
+  async listAll() {
+    return await prisma.course.findMany()
+  }
 }
