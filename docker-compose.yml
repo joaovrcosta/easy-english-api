@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRESQL_USERNAME: docker
       POSTGRESQL_PASSWORD: docker
-      POSTGRESQL_DATABASE: lumi
+      POSTGRESQL_DATABASE: easy
 #     networks:
 #       - questty
 # networks:

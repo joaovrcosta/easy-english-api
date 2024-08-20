@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,14 +7,170 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Teacher {
+  id        Int        @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String
+  birthDay  DateTime
+  courses   Course[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Schedule  Schedule[]
+
+  @@map("teachers")
+}
+
+model Student {
+  id          Int               @id @default(autoincrement())
+  name        String
+  active      Boolean
+  phone       String
+  birthDay    DateTime
+  email       String
+  civil_state String
+  religion    String
+  cpf         String
+  rg          String
+  nationality String
+  sex         String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  guardianId  Int?
+  Guardian    Guardian?         @relation(fields: [guardianId], references: [id])
+  Address     Address[]
+  courses     StudentCourse[]
+  Contract    Contract[]
+  Invoice     Invoice[]
+  guardians   StudentGuardian[]
+
+  @@map("students")
+}
+
+model StudentGuardian {
+  studentId  Int
+  guardianId Int
+  student    Student  @relation(fields: [studentId], references: [id])
+  guardian   Guardian @relation(fields: [guardianId], references: [id])
+
+  @@id([studentId, guardianId])
+}
+
+model Guardian {
+  id           Int               @id @default(autoincrement())
+  name         String
+  phone        String
+  email        String
+  relationship String
+  students     StudentGuardian[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  Student      Student[]
+  Address      Address[]
+}
+
+model Address {
+  id           Int       @id @default(autoincrement())
+  street       String
+  number       String
+  complement   String?
+  neighborhood String
+  city         String
+  state        String
+  zipCode      String
+  studentId    Int
+  student      Student   @relation(fields: [studentId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  Guardian     Guardian? @relation(fields: [guardianId], references: [id])
+  guardianId   Int?
+}
+
+model Contract {
+  id         String    @id @default(uuid())
+  duration   Int
+  totalValue Int
+  active     Boolean
+  startDate  DateTime
+  endDate    DateTime
+  studentId  Int
+  student    Student   @relation(fields: [studentId], references: [id])
+  invoices   Invoice[]
+
+  @@map("contracts")
+}
+
 model Invoice {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  title       String
-  description String
-  amount      Float
-  paid        Boolean
+  id         String   @id @default(uuid())
+  amount     Int
+  emission   DateTime
+  dueDate    DateTime
+  discount   Int
+  interest   Int
+  fine       Int
+  paid       Boolean
+  studentId  Int
+  student    Student  @relation(fields: [studentId], references: [id])
+  contractId String
+  contract   Contract @relation(fields: [contractId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("invoices")
+}
+
+model StudentCourse {
+  studentId Int
+  courseId  Int
+  Student   Student  @relation(fields: [studentId], references: [id])
+  Course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([studentId, courseId])
+  @@map("student_courses")
+}
+
+model Course {
+  id           Int             @id @default(autoincrement())
+  acronym      String
+  name         String
+  valuePerHour Int
+  category     String
+  language     String
+  available    Boolean
+  avaliation   Float
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  teacherId    Int?
+  teacher      Teacher?        @relation(fields: [teacherId], references: [id])
+  students     StudentCourse[]
+  Schedule     Schedule[]
+
+  @@map("courses")
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model Schedule {
+  id        Int         @id @default(autoincrement())
+  startTime DateTime
+  endTime   DateTime
+  dayOfWeek DayOfWeek[]
+  courseId  Int
+  course    Course      @relation(fields: [courseId], references: [id])
+  teacherId Int
+  teacher   Teacher     @relation(fields: [teacherId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("schedules")
 }
