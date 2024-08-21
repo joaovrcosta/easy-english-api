@@ -44,13 +44,10 @@ export class CreateContract {
     const invoices: Invoice[] = []
     const rawInvoiceAmount = totalValue / duration
 
-    // Arredondando para dois decimais
     const roundedInvoiceAmount = Math.round(rawInvoiceAmount * 100) / 100
 
-    // Calculando o valor total das faturas arredondadas
     const totalRoundedValue = roundedInvoiceAmount * duration
 
-    // Calculando a diferença
     const adjustment = Math.round((totalValue - totalRoundedValue) * 100) / 100
 
     const invoiceDate = new Date(startDate)
@@ -61,19 +58,20 @@ export class CreateContract {
 
       let amount = roundedInvoiceAmount
 
-      // Ajuste na última fatura para garantir que o total seja igual ao totalValue
       if (i === duration - 1) {
         amount += adjustment
       }
 
+      const amountInCents = Math.round(amount * 100)
+
       const invoice = await this.invoicesRepository.create({
         dueDate,
-        amount,
+        amount: amountInCents,
         emission: new Date(),
         discount: 0,
         interest: 0,
         fine: 0,
-        paid: false,
+        status: 'UNPAID',
         contractId: contract.id,
         studentId,
       })
