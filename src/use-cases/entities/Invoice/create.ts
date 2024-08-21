@@ -8,9 +8,9 @@ interface CreateInvoiceUseCaseProps {
   discount: number
   interest: number
   fine: number
-  paid: boolean
   studentId: number
   contractId: string
+  status: 'PAID' | 'UNPAID' | 'PENDING' | 'SCHOLARSHIP'
 }
 
 interface CreateInvoiceUseCaseResponse {
@@ -27,7 +27,7 @@ export class CreateInvoice {
     discount,
     interest,
     fine,
-    paid,
+    status,
     studentId,
     contractId,
   }: CreateInvoiceUseCaseProps): Promise<CreateInvoiceUseCaseResponse> {
@@ -38,7 +38,7 @@ export class CreateInvoice {
       discount,
       interest,
       fine,
-      paid,
+      status,
       studentId,
       contractId,
     })

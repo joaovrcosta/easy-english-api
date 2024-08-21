@@ -9,6 +9,7 @@ import { teachersRoutes } from './http/controllers/teachers/routes'
 import { classesRoutes } from './http/controllers/classes/routes'
 import { schedulesRoutes } from './http/controllers/schedules/routes'
 import { contractsRoutes } from './http/controllers/contracts/routes'
+import { invoicesRoutes } from './http/controllers/invoices/routes'
 
 export const app = fastify()
 
@@ -34,6 +35,7 @@ app.register(teachersRoutes)
 app.register(classesRoutes)
 app.register(schedulesRoutes)
 app.register(contractsRoutes)
+app.register(invoicesRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

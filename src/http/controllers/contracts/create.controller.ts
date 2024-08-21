@@ -37,13 +37,10 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     })
   } catch (err) {
     if (err instanceof z.ZodError) {
-      // Erro de validação do Zod
       return reply.status(400).send({ message: err.errors })
     } else if (err instanceof Error) {
-      // Erros gerais
       return reply.code(500).send({ message: err.message })
     } else {
-      // Erro desconhecido
       return reply.code(500).send({ message: 'Unknown error occurred' })
     }
   }

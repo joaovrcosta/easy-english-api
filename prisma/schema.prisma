@@ -101,22 +101,30 @@ model Contract {
 }
 
 model Invoice {
-  id         String   @id @default(uuid())
-  amount     Int
-  emission   DateTime
-  dueDate    DateTime
-  discount   Int
-  interest   Int
-  fine       Int
-  paid       Boolean
-  studentId  Int
-  student    Student  @relation(fields: [studentId], references: [id])
-  contractId String
-  contract   Contract @relation(fields: [contractId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String        @id @default(uuid())
+  amount      Int
+  emission    DateTime
+  dueDate     DateTime
+  scholarship Boolean       @default(false)
+  discount    Int
+  interest    Int
+  fine        Int
+  status      InvoiceStatus @default(UNPAID)
+  studentId   Int
+  student     Student       @relation(fields: [studentId], references: [id])
+  contractId  String
+  contract    Contract      @relation(fields: [contractId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@map("invoices")
+}
+
+enum InvoiceStatus {
+  PAID
+  UNPAID
+  PENDING
+  SCHOLARSHIP
 }
 
 model StudentCourse {
